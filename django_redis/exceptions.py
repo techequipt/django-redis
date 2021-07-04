@@ -10,3 +10,7 @@ class ConnectionInterrupted(Exception):
 
 class CompressorError(Exception):
     pass
+
+
+class PickleError(ValueError):
+    pass

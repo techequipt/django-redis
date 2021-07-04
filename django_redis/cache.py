@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.cache.backends.base import BaseCache
 from django.utils.module_loading import import_string
 
-from .exceptions import ConnectionInterrupted
+from .exceptions import ConnectionInterrupted, PickleError
 
 DJANGO_REDIS_SCAN_ITERSIZE = getattr(settings, "DJANGO_REDIS_SCAN_ITERSIZE", 10)
 
@@ -29,7 +29,7 @@ def omit_exception(
     def _decorator(self, *args, **kwargs):
         try:
             return method(self, *args, **kwargs)
-        except ConnectionInterrupted as e:
+        except (ConnectionInterrupted, PickleError) as e:
             if self._ignore_exceptions:
                 if self._log_ignored_exceptions:
                     self.logger.error(str(e))

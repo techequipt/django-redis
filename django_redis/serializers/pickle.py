@@ -3,6 +3,8 @@ from typing import Any
 
 from django.core.exceptions import ImproperlyConfigured
 
+from django_redis.exceptions import PickleError
+
 from .base import BaseSerializer
 
 
@@ -24,4 +26,7 @@ class PickleSerializer(BaseSerializer):
         return pickle.dumps(value, self._pickle_version)
 
     def loads(self, value: bytes) -> Any:
-        return pickle.loads(value)
+        try:
+            return pickle.loads(value)
+        except ValueError:
+            raise PickleError
